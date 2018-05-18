@@ -7,7 +7,6 @@ function Group(groupName, directory) {
 }
 
 Group.prototype.hasExtension = function (extension) {
-    console.log(this.extentionsList.includes(extension));
     return this.extentionsList.includes(extension);
 }
 

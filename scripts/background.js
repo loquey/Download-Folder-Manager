@@ -35,12 +35,9 @@ chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, sugge
 function extractExtension(filename) {
     return filename.substr(filename.lastIndexOf(".") + 1);
 }
-//extract file extension 
-//check map for dicrectory 
-//return new file path
-
 
 chrome.runtime.onInstalled.addListener(function () {
+    //TODO: Check the reason for installation and act accordingly
     var groups = [];
     for (const key in defaultGroups) {
         var group = new Group(key, key);
@@ -50,5 +47,4 @@ chrome.runtime.onInstalled.addListener(function () {
 
     groupMap = new GroupMap(groups);
     groupMap.save();
-    console.log(groupMap);
 });

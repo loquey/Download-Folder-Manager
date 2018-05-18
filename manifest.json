@@ -16,7 +16,6 @@
         "persistent": false,
         "scripts": [
             "/scripts/background.js",
-            "/scripts/jquery.js",
             "/scripts/GroupMap.js",
             "/scripts/Group.js"
         ]
