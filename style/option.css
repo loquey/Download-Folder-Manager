@@ -1,40 +1,81 @@
 body {
-    width: 600px;
-    height: 400px;
-    padding: 20px;
+  width: 600px;
+  height: 400px;
+  padding: 20px;
+}
+
+.btn-space {
+  margin: 0 5 0 5px;
 }
 
 div.minimalistBlack {
-    width: 100%;
-    text-align: left;
-  }
-  .divTable.minimalistBlack .divTableCell, .divTable.minimalistBlack .divTableHead {
-    border: 1px solid #000000;
-    padding: 5px 4px;
-  }
-  .divTable.minimalistBlack .divTableBody .divTableCell {
-    font-size: 12px;
-  }
-  .divTable.minimalistBlack .divTableRow:nth-child(even) {
-    background: #D0E4F5;
-  }
-  .divTable.minimalistBlack .divTableHeading {
-      border-bottom: 3px solid #000000;
-  }
-  .divTable.minimalistBlack .divTableHeading .divTableHead {
-    font-size: 14px;
-    font-weight: bold;
-    color: #000000;
-    text-align: left;
-  }
-  .minimalistBlack .tableFootStyle {
-    font-size: 14px;
-  }
-  /* DivTable.com */
-  .divTable{ display: table; }
-  .divTableRow { display: table-row; }
-  .divTableHeading { display: table-header-group;}
-  .divTableCell, .divTableHead { display: table-cell;}
-  .divTableHeading { display: table-header-group;}
-  .divTableFoot { display: table-footer-group;}
-  .divTableBody { display: table-row-group;}
+  width: 100%;
+  text-align: left;
+}
+
+.divTable.minimalistBlack .divTableCell, .divTable.minimalistBlack .divTableHead {
+  border: 1px solid #000000;
+  padding: 5px 4px;
+}
+
+.divTable.minimalistBlack .divTableBody .divTableCell {
+  font-size: 12px;
+}
+
+.divTable.minimalistBlack .divTableRow:nth-child(even) {
+  background: #D0E4F5;
+}
+
+.divTable.minimalistBlack .divTableHeading {
+  border-bottom: 3px solid #000000;
+}
+
+.divTable.minimalistBlack .divTableHeading .divTableHead {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+  text-align: left;
+}
+
+.minimalistBlack .tableFootStyle {
+  font-size: 14px;
+}
+
+
+/* DivTable.com */
+
+.divTable {
+  display: table;
+}
+
+.divTableRow {
+  display: table-row;
+}
+
+.divTableHeading {
+  display: table-header-group;
+}
+
+.divTableCell, .divTableHead {
+  display: table-cell;
+}
+
+.divTableHeading {
+  display: table-header-group;
+}
+
+.divTableFoot {
+  display: table-footer-group;
+}
+
+.divTableBody {
+  display: table-row-group;
+}
+
+.modal-notify .modal-header {
+  border-radius: 3px 3px 0 0;
+}
+
+.modal-notify .modal-content {
+  border-radius: 3px;
+}

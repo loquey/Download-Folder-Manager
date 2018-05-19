@@ -1,11 +1,23 @@
-function GroupMap(groups) {
-    this.groups = groups;
-}
+function GroupMap(opts) {
+    if (Array.isArray(opts.groupTypes)) {
+        this.groups = opts.groupTypes;
+        return;
+    }
 
+    if (Array.isArray(opts.groupObjects)) {
+        this.groups = opts.groupObjects.map(function (item) {
+            return new Group(item);
+        });
+
+        return;
+    }
+}
 
 GroupMap.prototype.load = function () {
     chrome.storage.sync.get("maps", function (items) {
-        this.groups = this.groups.concat(items);
+        this.groups = this.groups.map(function (item, index) {
+            return new Group(item);
+        });
     });
 }
 
@@ -16,7 +28,14 @@ GroupMap.prototype.save = function () {
             return;
         }
         console.log("Maps save successful");
+        debugSet();
     })
+}
+
+function debugSet() {
+    chrome.storage.sync.get(null, function (items) {
+        console.log(items);
+    });
 }
 
 GroupMap.prototype.search = function (fileExtension) {
@@ -27,6 +46,53 @@ GroupMap.prototype.search = function (fileExtension) {
     return this.groups.find(function (group) {
         return group.hasExtension(fileExtension);
     });
+}
+
+GroupMap.prototype.render = function (renderer) {
+    return this.groups.map(renderer);
+}
+
+GroupMap.prototype.addGroup = function (group) {
+    var found = this.groups.find(function (iter) {
+        return iter.groupName == group.groupName
+    });
+
+    if (found != undefined) {
+        return false;
+    }
+
+    this.groups.push(group);
+    return true;
+}
+
+GroupMap.prototype.deleteGroup = function (opts) {
+
+    var index = null;
+    if (opts.groupName != undefined) {
+        index = this.findGroupIndex(opts.groupName);
+    }
+
+    if (opts.group != undefined) {
+        index = this.findGroupIndex(opts.group.groupName);
+    }
+    this.groups.splice(index, 1);
+}
+
+GroupMap.prototype.findGroupIndex = function (groupName) {
+    return this.groups.findIndex(function (iter) {
+        return iter.groupName == groupName
+    });
+}
+
+GroupMap.prototype.findGroup = function(groupName) {
+    return this.groups.find(function (iter) {
+        return iter.groupName == groupName
+    });
+}
+
+GroupMap.prototype.replaceGroup = function(groupName, newGroup) {
+    var oldGroupIndex = this.findGroupIndex(groupName); 
+    this.groups.splice(oldGroupIndex, 1, newGroup);
 }
 
 // GroupMap.prototype.getFileMap = function (file) {
