@@ -50,7 +50,7 @@ function routeMessage(msg) {
         }
         case "delete-group-extension": {
             if (msg.data.status) {
-                $("a[data-dm-ext='" + msg.data.ext + "']").remove();
+                $("div[data-dm-groupname=" + msg.data.group.groupName + "] a[data-dm-ext='" + msg.data.ext + "']").remove();
             }
             break;
         }
