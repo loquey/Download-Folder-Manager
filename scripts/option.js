@@ -60,6 +60,7 @@ function routeMessage(msg) {
                 group = globalContext.groupMap.search(msg.data.ext);
                 $("div[data-dm-groupname='" + group.groupName + "'] div:nth-child(2)").append(btn);
             }
+            hookEventHandlers();
             break;
         }
         case "add-new-group": {
@@ -164,7 +165,6 @@ function hookEventHandlers() {
         }else {
             alert("Group already contains extension");
         }
-
     });
 
     $("a[data-dm-act='delg']").click(function () {
