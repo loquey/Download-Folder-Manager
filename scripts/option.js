@@ -38,6 +38,7 @@ function initPort() {
 function routeMessage(msg) {
     switch (msg.command) {
         case "get-loaded-groups": {
+            console.log(msg.data);
             globalContext.groupMap = new GroupMap({ groupObjects: msg.data.groups });
             renderGroups(globalContext.groupMap);
             hookEventHandlers();
@@ -89,6 +90,7 @@ function appendTableRows(rows) {
 }
 
 function loadGroups() {
+    console.log("Load groups command sent");
     globalContext.port.postMessage({ "command": "get-loaded-groups" });
 }
 

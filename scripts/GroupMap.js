@@ -1,4 +1,10 @@
 function GroupMap(opts) {
+
+    if (opts == undefined) {
+        this.groups = [];
+        return;
+    }
+
     if (Array.isArray(opts.groupTypes)) {
         this.groups = opts.groupTypes;
         return;
@@ -14,11 +20,20 @@ function GroupMap(opts) {
 }
 
 GroupMap.prototype.load = function () {
+    var groupMap = this;
     chrome.storage.sync.get("maps", function (items) {
-        this.groups = this.groups.map(function (item, index) {
+        console.log(items);
+
+        groupMap.groups = items.maps.map(function (item, index) {
             return new Group(item);
         });
+        console.log(groupMap);
     });
+}
+
+GroupMap.prototype.selfReference = function () {
+    console.log(this);
+    return this;
 }
 
 GroupMap.prototype.save = function () {
@@ -84,14 +99,14 @@ GroupMap.prototype.findGroupIndex = function (groupName) {
     });
 }
 
-GroupMap.prototype.findGroup = function(groupName) {
+GroupMap.prototype.findGroup = function (groupName) {
     return this.groups.find(function (iter) {
         return iter.groupName == groupName
     });
 }
 
-GroupMap.prototype.replaceGroup = function(groupName, newGroup) {
-    var oldGroupIndex = this.findGroupIndex(groupName); 
+GroupMap.prototype.replaceGroup = function (groupName, newGroup) {
+    var oldGroupIndex = this.findGroupIndex(groupName);
     this.groups.splice(oldGroupIndex, 1, newGroup);
 }
 

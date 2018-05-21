@@ -14,21 +14,26 @@ var defaultGroups = {
     "Pictures": [
         "png", "bmp", "jpg", "jpeg", "tiff", "gif", "tif", "jpe", "jfif", "dib"
     ]
+    //videos are missing
 };
 
-var groupMap = null;
+var globalContext = {
+    groupMap : null
+};
+
 
 chrome.runtime.onStartup.addListener(function () {
-    if (groupMap != null)
+    console.log("On Statup event call");
+    if (globalContext.groupMap != null)
         return;
-
-    groupMap = new groupMap();
-    groupMap.load();
+    
+    globalContext.groupMap = new GroupMap();
+    globalContext.groupMap.load();
 });
 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
     var ext = extractExtension(downloadItem.filename);
-    var group = groupMap.search(ext);
+    var group = globalContext.groupMap.search(ext);
     suggest({ "filename": group.directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
 });
 
@@ -36,17 +41,28 @@ function extractExtension(filename) {
     return filename.substr(filename.lastIndexOf(".") + 1);
 }
 
-chrome.runtime.onInstalled.addListener(function () {
-    //TODO: Check the reason for installation and act accordingly
+chrome.runtime.onInstalled.addListener(function (details) {
+    var gm = new GroupMap({});
+    gm.load();
+    if (details.reason == "install") {
+        setupDefaultGroups();
+    }
+
+    globalContext.groupMap = new GroupMap({});
+    globalContext.groupMap.load();
+    //setupDefaultGroups();
+});
+
+function setupDefaultGroups() {
     var newGroups = [];
     for (const key in defaultGroups) {
         var group = new Group({ groupName: key, directory: key, extensionList: defaultGroups[key] });
         newGroups.push(group);
     }
-
-    groupMap = new GroupMap({ groupTypes: newGroups });
-    groupMap.save();
-});
+    globalContext.groupMap = new GroupMap({ groupTypes: newGroups });
+    globalContext.groupMap.save();
+    console.log("onInstall Event:Default group setup");
+}
 
 var port = null;
 chrome.runtime.onConnect.addListener(function (requestPort) {
@@ -60,26 +76,28 @@ function handleMessages(msg) {
 
     switch (msg.command) {
         case "get-loaded-groups": {
-            port.postMessage({ command: msg.command, data: groupMap });
+            console.log("load groups command processing...");
+            console.log(globalContext.groupMap);
+            port.postMessage({ command: msg.command, data: globalContext.groupMap });
             break;
         }
         case "delete-group": {
-            groupMap.deleteGroup({ groupName: msg.data });
-            groupMap.save();
+            globalContext.groupMap.deleteGroup({ groupName: msg.data });
+            globalContext.groupMap.save();
             port.postMessage({ command: msg.command, data: msg.data })
             break;
         }
         case "delete-group-extension": {
             // var group = new Group(msg.data.group);
-            // groupMap.replaceGroup(group.groupName, group);
-            // groupMap.save();
+            // globalContext.groupMap.replaceGroup(group.groupName, group);
+            // globalContext.groupMap.save();
             // port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext } })
             // break;
         }
         case "add-group-extension" : {
             var group = new Group(msg.data.group);
-            groupMap.replaceGroup(group.groupName, group);
-            groupMap.save();
+            globalContext.groupMap.replaceGroup(group.groupName, group);
+            globalContext.groupMap.save();
             port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext } })
             break;
         }
@@ -89,12 +107,12 @@ function handleMessages(msg) {
             var status = true;
             var statusMsg = "New group added successfully ";
 
-            if (!groupMap.addGroup(group)) {
+            if (!globalContext.groupMap.addGroup(group)) {
                 status = false;
                 statusMsg = "Duplicate group found";
             }
 
-            groupMap.save();
+            globalContext.groupMap.save();
             port.postMessage({ command: "add-new-group", data: { status: status, statusMsg: statusMsg, group: group } });
             break;
         }
