@@ -42,15 +42,13 @@ function extractExtension(filename) {
 }
 
 chrome.runtime.onInstalled.addListener(function (details) {
-    var gm = new GroupMap({});
-    gm.load();
+
     if (details.reason == "install") {
         setupDefaultGroups();
     }
 
     globalContext.groupMap = new GroupMap({});
     globalContext.groupMap.load();
-    //setupDefaultGroups();
 });
 
 function setupDefaultGroups() {
@@ -98,7 +96,7 @@ function handleMessages(msg) {
             var group = new Group(msg.data.group);
             globalContext.groupMap.replaceGroup(group.groupName, group);
             globalContext.groupMap.save();
-            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext } })
+            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group : group } })
             break;
         }
         case "add-new-group": {
