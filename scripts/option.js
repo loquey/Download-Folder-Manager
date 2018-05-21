@@ -50,7 +50,7 @@ function routeMessage(msg) {
         }
         case "delete-group-extension": {
             if (msg.data.status) {
-                $("div[data-dm-groupname=" + msg.data.group.groupName + "] a[data-dm-ext='" + msg.data.ext + "']").remove();
+                $("div[data-dm-groupname='" + msg.data.group.groupName + "'] a[data-dm-ext='" + msg.data.ext + "']").remove();
             }
             break;
         }
@@ -58,7 +58,7 @@ function routeMessage(msg) {
             if (msg.data.status) {
                 var btn = extensionToButton(msg.data.ext);
                 group = globalContext.groupMap.search(msg.data.ext);
-                $("div[data-dm-groupname='" + group.groupName + "']").children().append(btn);
+                $("div[data-dm-groupname='" + group.groupName + "'] div:nth-child(2)").append(btn);
             }
             break;
         }
