@@ -110,6 +110,10 @@ GroupMap.prototype.replaceGroup = function (groupName, newGroup) {
     this.groups.splice(oldGroupIndex, 1, newGroup);
 }
 
+GroupMap.prototype.clear = function(){
+    chrome.storage.sync.clear("maps");
+}
+
 // GroupMap.prototype.getFileMap = function (file) {
 //     if (this.groups.hasOwnProperty(file)) {
 //         return this.groups[file];

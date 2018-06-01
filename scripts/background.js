@@ -1,34 +1,63 @@
-var defaultGroups = {
-    "Documents": [
-        "pdf", "xls", "doc", "docx", "xlsx", "rtf"
-    ],
-    "Programs": [
-        "exe", "msi"
-    ],
-    "Music": [
-        "mp3", 'm4a', "wav", "wma", "flac", "ogg"
-    ],
-    "Compressed": [
-        "zip", "7z", "rar", "lzo", "lzma", "tar", "gz", "bz"
-    ],
-    "Pictures": [
-        "png", "bmp", "jpg", "jpeg", "tiff", "gif", "tif", "jpe", "jfif", "dib"
-    ]
-    //videos are missing
-};
-
 var globalContext = {
-    groupMap : null
+    groupMap : null,
+    defaultGroups : {
+        "Documents": [
+            "pdf", "xls", "doc", "docx", "xlsx", "rtf"
+        ],
+        "Programs": [
+            "exe", "msi"
+        ],
+        "Music": [
+            "mp3", 'm4a', "wav", "wma", "flac", "ogg"
+        ],
+        "Compressed": [
+            "zip", "7z", "rar", "lzo", "lzma", "tar", "gz", "bz"
+        ],
+        "Pictures": [
+            "png", "bmp", "jpg", "jpeg", "tiff", "gif", "tif", "jpe", "jfif", "dib"
+        ], 
+        "Videos" : [
+            "avi", "mp4", "mpg", "wmv", "mov", "rmvb","mkv", "m4v", "mpe", "mpeg", "divx", "f4v", "flv", "ogv", "vcd", "vob"
+        ]
+        //videos are missing
+    },
 };
 
 
+var eventHandler = [];
+/**********
+ * Browser Event Handlers 
+ */
 chrome.runtime.onStartup.addListener(function () {
-    console.log("On Statup event call");
+    console.log("On Statup event");
     if (globalContext.groupMap != null)
         return;
-    
-    globalContext.groupMap = new GroupMap();
-    globalContext.groupMap.load();
+
+    loadGroupMap();
+});
+
+chrome.runtime.onInstalled.addListener(function (details) {
+
+    if (details.reason == "install") {
+        setupDefaultGroups();
+    }
+    loadGroupMap();
+});
+
+chrome.management.onUninstalled.addListener(function(id) {
+    chrome.management.getSelf(function(selfInfo) {
+        if (id == selfInfo.id) {
+            globalContext.groupMap.clear();
+        }
+    });
+});
+
+chrome.management.onEnabled.addListener(function(info) {
+    chrome.management.getSelf(function(selfInfo) {
+        if (info.id == selfInfo.id) {
+            loadGroupMap();
+        }
+    });
 });
 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
@@ -41,32 +70,31 @@ function extractExtension(filename) {
     return filename.substr(filename.lastIndexOf(".") + 1);
 }
 
-chrome.runtime.onInstalled.addListener(function (details) {
-
-    if (details.reason == "install") {
-        setupDefaultGroups();
-    }
-
-    globalContext.groupMap = new GroupMap({});
-    globalContext.groupMap.load();
+var port = null;
+chrome.runtime.onConnect.addListener(function (requestPort) {
+    port = requestPort;
+    port.onMessage.addListener(handleMessages);
 });
+
+/**
+ * Browser event handlers end 
+ */
+
+ function loadGroupMap() {
+    globalContext.groupMap = new GroupMap();
+    globalContext.groupMap.load();
+ }
 
 function setupDefaultGroups() {
     var newGroups = [];
-    for (const key in defaultGroups) {
-        var group = new Group({ groupName: key, directory: key, extensionList: defaultGroups[key] });
+    for (const key in globalContext.defaultGroups) {
+        var group = new Group({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
         newGroups.push(group);
     }
     globalContext.groupMap = new GroupMap({ groupTypes: newGroups });
     globalContext.groupMap.save();
     console.log("onInstall Event:Default group setup");
 }
-
-var port = null;
-chrome.runtime.onConnect.addListener(function (requestPort) {
-    port = requestPort;
-    port.onMessage.addListener(handleMessages);
-});
 
 function handleMessages(msg) {
     if (port == null)
