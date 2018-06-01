@@ -1,6 +1,6 @@
 var globalContext = {
-    groupMap : null,
-    defaultGroups : {
+    groupMap: null,
+    defaultGroups: {
         "Documents": [
             "pdf", "xls", "doc", "docx", "xlsx", "rtf"
         ],
@@ -15,9 +15,9 @@ var globalContext = {
         ],
         "Pictures": [
             "png", "bmp", "jpg", "jpeg", "tiff", "gif", "tif", "jpe", "jfif", "dib"
-        ], 
-        "Videos" : [
-            "avi", "mp4", "mpg", "wmv", "mov", "rmvb","mkv", "m4v", "mpe", "mpeg", "divx", "f4v", "flv", "ogv", "vcd", "vob"
+        ],
+        "Videos": [
+            "avi", "mp4", "mpg", "wmv", "mov", "rmvb", "mkv", "m4v", "mpe", "mpeg", "divx", "f4v", "flv", "ogv", "vcd", "vob"
         ]
         //videos are missing
     },
@@ -44,29 +44,43 @@ chrome.runtime.onInstalled.addListener(function (details) {
     loadGroupMap();
 });
 
-chrome.management.onUninstalled.addListener(function(id) {
+chrome.management.onUninstalled.addListener(function (id) {
     console.log("On uninstall event")
-    chrome.management.getSelf(function(selfInfo) {
+    chrome.management.getSelf(function (selfInfo) {
         if (id == selfInfo.id) {
             globalContext.groupMap.clear();
         }
     });
 });
 
-chrome.management.onEnabled.addListener(function(info) {
+chrome.management.onEnabled.addListener(function (info) {
     console.log("On enabled event handler");
-    chrome.management.getSelf(function(selfInfo) {
+    chrome.management.getSelf(function (selfInfo) {
         if (info.id == selfInfo.id) {
             loadGroupMap();
         }
     });
 });
 
+
+// ---> fix here as well 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
+
+    if (globalContext.groupMap.groups == null) {
+        loadGroupMap(function (downloadItem, suggest) {
+            suggestDirectory(downloadItem, suggest);
+        });
+        return;
+    }
+
+    suggestDirectory(downloadItem, suggest);
+});
+
+function suggestDirectory(downloadItem, suggest) {
     var ext = extractExtension(downloadItem.filename);
     var group = globalContext.groupMap.search(ext);
     suggest({ "filename": group.directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
-});
+}
 
 function extractExtension(filename) {
     return filename.substr(filename.lastIndexOf(".") + 1);
@@ -82,10 +96,16 @@ chrome.runtime.onConnect.addListener(function (requestPort) {
  * Browser event handlers end 
  */
 
- function loadGroupMap() {
+function loadGroupMap(callback) {
+
+    if (globalContext.groupMap != null) {
+        callback();
+        return;
+    }
+
     globalContext.groupMap = new GroupMap();
-    globalContext.groupMap.load();
- }
+    globalContext.groupMap.load(callback);
+}
 
 function setupDefaultGroups() {
     var newGroups = [];
@@ -106,10 +126,11 @@ function handleMessages(msg) {
         case "get-loaded-groups": {
             console.log("load groups command processing...");
             console.log(globalContext.groupMap);
-            if (globalContext.groupMap == null) {
-                loadGroupMap();
-            }
-            port.postMessage({ command: msg.command, data: globalContext.groupMap });
+
+            loadGroupMap(function () {
+                port.postMessage({ command: msg.command, data: globalContext.groupMap });
+            });
+
             break;
         }
         case "delete-group": {
@@ -125,11 +146,11 @@ function handleMessages(msg) {
             // port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext } })
             // break;
         }
-        case "add-group-extension" : {
+        case "add-group-extension": {
             var group = new Group(msg.data.group);
             globalContext.groupMap.replaceGroup(group.groupName, group);
             globalContext.groupMap.save();
-            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group : group } })
+            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group } })
             break;
         }
         case "add-new-group": {

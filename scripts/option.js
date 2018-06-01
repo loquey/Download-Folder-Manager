@@ -39,6 +39,7 @@ function routeMessage(msg) {
     switch (msg.command) {
         case "get-loaded-groups": {
             console.log(msg.data);
+            console.log("loaded group response");
             globalContext.groupMap = new GroupMap({ groupObjects: msg.data.groups });
             renderGroups(globalContext.groupMap);
             hookEventHandlers();

@@ -19,7 +19,7 @@ function GroupMap(opts) {
     }
 }
 
-GroupMap.prototype.load = function () {
+GroupMap.prototype.load = function (callback) {
     var groupMap = this;
     chrome.storage.sync.get("maps", function (items) {
         console.log(items);
@@ -28,6 +28,10 @@ GroupMap.prototype.load = function () {
             return new Group(item);
         });
         console.log(groupMap);
+        
+        if (callback != undefined && callback != null) {
+            callback();
+        }
     });
 }
 
