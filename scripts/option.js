@@ -8,7 +8,7 @@ $(function () {
 
     initPort();
     loadGroups();
-    $("#save").click(function () {
+    $("#save").click(function () {6
         var groupName = $("#groupname").val().trim();
         var groupDirectory = $("#directory").val().trim();
         var groupExtensions = $("#extensions").val().trim();

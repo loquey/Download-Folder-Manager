@@ -37,7 +37,7 @@ chrome.runtime.onStartup.addListener(function () {
 });
 
 chrome.runtime.onInstalled.addListener(function (details) {
-
+    console.log("On install event");
     if (details.reason == "install") {
         setupDefaultGroups();
     }
@@ -45,6 +45,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.management.onUninstalled.addListener(function(id) {
+    console.log("On uninstall event")
     chrome.management.getSelf(function(selfInfo) {
         if (id == selfInfo.id) {
             globalContext.groupMap.clear();
@@ -53,6 +54,7 @@ chrome.management.onUninstalled.addListener(function(id) {
 });
 
 chrome.management.onEnabled.addListener(function(info) {
+    console.log("On enabled event handler");
     chrome.management.getSelf(function(selfInfo) {
         if (info.id == selfInfo.id) {
             loadGroupMap();
@@ -104,6 +106,9 @@ function handleMessages(msg) {
         case "get-loaded-groups": {
             console.log("load groups command processing...");
             console.log(globalContext.groupMap);
+            if (globalContext.groupMap == null) {
+                loadGroupMap();
+            }
             port.postMessage({ command: msg.command, data: globalContext.groupMap });
             break;
         }
