@@ -13,7 +13,7 @@
         "default_title": "Download folder manager"
     },
     "background": {
-        "persistent": false,
+        "persistent": true,
         "scripts": [
             "/scripts/background.js",
             "/scripts/GroupMap.js",
