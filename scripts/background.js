@@ -78,7 +78,8 @@ chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, sugge
 
 function suggestDirectory(downloadItem, suggest) {
     var ext = extractExtension(downloadItem.filename);
-    var group = globalContext.groupMap.search(ext);
+    //var group = globalContext.groupMap.search(ext);
+    var group = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
     suggest({ "filename": group.directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
 }
 

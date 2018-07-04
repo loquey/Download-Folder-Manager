@@ -17,7 +17,8 @@
         "scripts": [
             "/scripts/background.js",
             "/scripts/GroupMap.js",
-            "/scripts/Group.js"
+            "/scripts/Group.js",
+            "/scripts/performance.js"
         ]
     },
     "permissions": [
