@@ -15,10 +15,7 @@
     "background": {
         "persistent": true,
         "scripts": [
-            "/scripts/config.js",
             "/scripts/background.js",
-            "/scripts/GroupMap.js",
-            "/scripts/Group.js",
             "/scripts/GroupMapV2.js",
             "/scripts/GroupV2.js",
             "/scripts/performance.js"

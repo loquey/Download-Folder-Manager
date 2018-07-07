@@ -12,7 +12,8 @@ function GroupMap(opts) {
 
     if (Array.isArray(opts.groupObjects)) {
         this.groups = opts.groupObjects.map(function (item) {
-            return new Group(item);
+            return groupFactory(item);
+            //return new Group(item);
         });
 
         return;
@@ -25,7 +26,8 @@ GroupMap.prototype.load = function (callback) {
         console.log(items);
 
         groupMap.groups = items.maps.map(function (item, index) {
-            return new Group(item);
+            return groupFactory(item);
+            //return new Group(item);
         });
         console.log(groupMap);
         

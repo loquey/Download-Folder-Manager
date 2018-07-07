@@ -1,3 +1,5 @@
+initAPI();
+
 var globalContext = {
     groupMap: null,
     defaultGroups: {
@@ -105,17 +107,20 @@ function loadGroupMap(callback) {
         return;
     }
 
-    globalContext.groupMap = new GroupMap();
+    //globalContext.groupMap = new GroupMap();
+    globalContext.groupMap = groupMapFactory();
     globalContext.groupMap.load(callback);
 }
 
 function setupDefaultGroups() {
     var newGroups = [];
     for (const key in globalContext.defaultGroups) {
-        var group = new Group({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
+        //var group = new Group({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
+        var group = groupFactory({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
         newGroups.push(group);
     }
-    globalContext.groupMap = new GroupMap({ groupTypes: newGroups });
+    //globalContext.groupMap = new GroupMap({ groupTypes: newGroups });
+    globalContext.groupMap = groupMapFactory({ groupTypes: newGroups });
     globalContext.groupMap.save();
     console.log("onInstall Event:Default group setup");
 }
@@ -149,7 +154,8 @@ function handleMessages(msg) {
             // break;
         }
         case "add-group-extension": {
-            var group = new Group(msg.data.group);
+            //var group = new Group(msg.data.group);
+            var group = groupFactory(msg.data.group);
             globalContext.groupMap.replaceGroup(group._groupName, group);
             globalContext.groupMap.save();
             port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group } })
@@ -157,7 +163,8 @@ function handleMessages(msg) {
         }
         case "add-new-group": {
             //conver to group object 
-            var group = new Group(msg.data);
+            //var group = new Group(msg.data);
+            var group = groupFactory(msg.data);
             var status = true;
             var statusMsg = "New group added successfully ";
 
