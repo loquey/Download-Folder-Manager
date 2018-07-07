@@ -10,25 +10,33 @@ class Group
             throw "Invalid group object, misssing group data";
         }
     
-        this.groupName = options.groupName;
-        this.extensionList = new Set(options.extensionList); 
-        this.directory = options.directory;
+        this._groupName = options.groupName;
+        this._extensionList = new Set(options.extensionList); 
+        this._directory = options.directory;
+    }
+
+    directory() {
+        return this._directory;
+    }
+
+    groupName() {
+        return this._groupName;
     }
 
     hasExtension(extension) {
-        return this.extensionList.has(extension);
+        return this._extensionList.has(extension);
     }
     
     addExtension(extension) {
-        this.extensionList.add(extension);
+        this._extensionList.add(extension);
     }
     
     addExtensions(extensions) {
-        extension.forEach(e => { this.extensionList.add(e); });
+        extension.forEach(e => { this._extensionList.add(e); });
     }
     
     removeExtension(extension) {
-        this.extensionList.delete(extension);
+        this._extensionList.delete(extension);
         return true;
     }
     
@@ -38,7 +46,7 @@ class Group
         }
 
         let map = new Array();
-        for (let x of this.extensionList) {
+        for (let x of this._extensionList) {
             map.push(converter(x));
         }
         return map;

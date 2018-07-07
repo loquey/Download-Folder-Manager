@@ -79,6 +79,7 @@ chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, sugge
 function suggestDirectory(downloadItem, suggest) {
     var ext = extractExtension(downloadItem.filename);
     //var group = globalContext.groupMap.search(ext);
+    //var directory = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
     var group = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
     suggest({ "filename": group.directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
 }
@@ -149,7 +150,7 @@ function handleMessages(msg) {
         }
         case "add-group-extension": {
             var group = new Group(msg.data.group);
-            globalContext.groupMap.replaceGroup(group.groupName, group);
+            globalContext.groupMap.replaceGroup(group._groupName, group);
             globalContext.groupMap.save();
             port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group } })
             break;
