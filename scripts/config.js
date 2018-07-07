@@ -7,14 +7,20 @@ const API_VERSION = API_VERSION_2;
 var groupFactory = null;
 var groupMapFactory = null
 
-function initAPI() { 
-    if (API_VERSION == API_VERSION_1) {
-        groupFactory = (args) => { return new Group(args); }
-        groupMapFactory = (args) => { return new GroupMap(args); }
-    }
+// function initAPI() { 
     
-    if (API_VERSION == API_VERSION_2) {
-        groupFactory = (args) => { return new GroupV2(args); }
-        groupMapFactory = (args) => { return new GroupMapV2(args); }
+// }
+
+class APIFactory { 
+    static initAPI() { 
+        if (API_VERSION == API_VERSION_1) {
+            this.groupFactory = (args) => { return new Group(args); }
+            this.groupMapFactory = (args) => { return new GroupMap(args); }
+        }
+        
+        if (API_VERSION == API_VERSION_2) {
+            this.groupFactory = (args) => { return new GroupV2(args); }
+            this.groupMapFactory = (args) => { return new GroupMapV2(args); }
+        }
     }
 }

@@ -1,3 +1,4 @@
+APIFactory.initAPI();
 
 var globalContext = {
     groupMap: {},

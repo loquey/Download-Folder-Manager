@@ -14,6 +14,13 @@ function Group(opts) {
     this.directory = opts.directory;
 }
 
+// Group.prototype.directory = function (extension) {
+//     return this.directory.includes(extension);
+// }
+
+// Group.prototype.groupName = function (extension) {
+//     return this.groupName;
+// }
 
 Group.prototype.hasExtension = function (extension) {
     return this.extensionList.includes(extension);

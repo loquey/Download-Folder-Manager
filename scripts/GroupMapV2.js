@@ -4,6 +4,10 @@ class GroupMapV2 {
         this._extensionMap = new Map();
         this._groups = new Map();
 
+        if (options == undefined) {
+            return;
+        }
+
         if (Array.isArray(options.groupTypes)) {
             this.addGroupTypesToMap(options.groupTypes);
             return;
@@ -16,12 +20,16 @@ class GroupMapV2 {
         this.flattenGroups();
     }
 
+    hasGroups() {
+        return this._groups != null && this._groups.size > 0;
+    }
+
     load(callback) {
         var groupMap = this;
         chrome.storage.sync.get("maps", function (items) {
             console.log(items);
 
-            addGroupObjectsToMap(items.map);
+            groupMap.addGroupObjectsToMap(items.maps);
             groupMap.flattenGroups();
             // groupMap.groups = items.maps.map(function (item, index) {
             //     return new Group(item);
@@ -36,7 +44,7 @@ class GroupMapV2 {
 
     addGroupObjectsToMap(groupObjects) {
         groupObjects.forEach(group => {
-            let tmpGroup = new Group(group);
+            let tmpGroup = APIFactory.groupFactory(group);
             this._groups.set(tmpGroup.groupName(), tmpGroup);
         });
     }
@@ -76,10 +84,12 @@ class GroupMapV2 {
     //search from flattened map 
     search(fileExtension) {
 
-        if (this._groups == null)
+        if (this._groups == null) {
             return undefined;
+
+        }
         //checks the default groups for which the file extension belongs 
-        return this._extensionMap[fileExtension]
+        return this._extensionMap.get(fileExtension);
 
     }
 

@@ -12,7 +12,7 @@ function GroupMap(opts) {
 
     if (Array.isArray(opts.groupObjects)) {
         this.groups = opts.groupObjects.map(function (item) {
-            return groupFactory(item);
+            return APIFactory.groupFactory(item);
             //return new Group(item);
         });
 
@@ -26,15 +26,19 @@ GroupMap.prototype.load = function (callback) {
         console.log(items);
 
         groupMap.groups = items.maps.map(function (item, index) {
-            return groupFactory(item);
+            return APIFactory.groupFactory(item);
             //return new Group(item);
         });
         console.log(groupMap);
-        
+
         if (callback != undefined && callback != null) {
             callback();
         }
     });
+}
+
+GroupMap.prototype.hasGroups = function () {
+    return this.groups != null && this.groups.length > 0;
 }
 
 GroupMap.prototype.selfReference = function () {
@@ -66,7 +70,7 @@ GroupMap.prototype.search = function (fileExtension) {
     //checks the default groups for which the file extension belongs 
     return this.groups.find(function (group) {
         return group.hasExtension(fileExtension);
-    });
+    }).directory;
 }
 
 GroupMap.prototype.render = function (renderer) {
@@ -116,7 +120,7 @@ GroupMap.prototype.replaceGroup = function (groupName, newGroup) {
     this.groups.splice(oldGroupIndex, 1, newGroup);
 }
 
-GroupMap.prototype.clear = function(){
+GroupMap.prototype.clear = function () {
     chrome.storage.sync.clear("maps");
 }
 

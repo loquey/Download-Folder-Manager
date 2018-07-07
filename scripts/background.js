@@ -1,4 +1,4 @@
-initAPI();
+APIFactory.initAPI();
 
 var globalContext = {
     groupMap: null,
@@ -67,9 +67,9 @@ chrome.management.onEnabled.addListener(function (info) {
 
 // ---> fix here as well 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
-
-    if (globalContext.groupMap.groups == null) {
-        loadGroupMap(function (downloadItem, suggest) {
+    if (!globalContext.groupMap.hasGroups()) {
+        loadGroupMap((downloadItem, suggest) => {
+            console.log(downloadItem);
             suggestDirectory(downloadItem, suggest);
         });
         return;
@@ -79,11 +79,13 @@ chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, sugge
 });
 
 function suggestDirectory(downloadItem, suggest) {
+    //console.log("called");
     var ext = extractExtension(downloadItem.filename);
     //var group = globalContext.groupMap.search(ext);
     //var directory = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
-    var group = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
-    suggest({ "filename": group.directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
+    var directory = PerfMonitor.monitor("groupMap.search", 100, globalContext.groupMap.search, globalContext.groupMap, ext);
+    console.log(directory);
+    suggest({ "filename": directory + "/" + downloadItem.filename, "conflictAction": "uniquify" });
 }
 
 function extractExtension(filename) {
@@ -108,7 +110,7 @@ function loadGroupMap(callback) {
     }
 
     //globalContext.groupMap = new GroupMap();
-    globalContext.groupMap = groupMapFactory();
+    globalContext.groupMap = APIFactory.groupMapFactory();
     globalContext.groupMap.load(callback);
 }
 
@@ -116,11 +118,11 @@ function setupDefaultGroups() {
     var newGroups = [];
     for (const key in globalContext.defaultGroups) {
         //var group = new Group({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
-        var group = groupFactory({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
+        var group = APIFactory.groupFactory({ groupName: key, directory: key, extensionList: globalContext.defaultGroups[key] });
         newGroups.push(group);
     }
     //globalContext.groupMap = new GroupMap({ groupTypes: newGroups });
-    globalContext.groupMap = groupMapFactory({ groupTypes: newGroups });
+    globalContext.groupMap = APIFactory.groupMapFactory({ groupTypes: newGroups });
     globalContext.groupMap.save();
     console.log("onInstall Event:Default group setup");
 }
@@ -155,7 +157,7 @@ function handleMessages(msg) {
         }
         case "add-group-extension": {
             //var group = new Group(msg.data.group);
-            var group = groupFactory(msg.data.group);
+            var group = APIFactory.groupFactory(msg.data.group);
             globalContext.groupMap.replaceGroup(group._groupName, group);
             globalContext.groupMap.save();
             port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group } })
@@ -164,7 +166,7 @@ function handleMessages(msg) {
         case "add-new-group": {
             //conver to group object 
             //var group = new Group(msg.data);
-            var group = groupFactory(msg.data);
+            var group = APIFactory.groupFactory(msg.data);
             var status = true;
             var statusMsg = "New group added successfully ";
 

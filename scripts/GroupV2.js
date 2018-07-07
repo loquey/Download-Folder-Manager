@@ -1,4 +1,4 @@
-class Group
+class GroupV2
 {
     constructor(options)
     {
