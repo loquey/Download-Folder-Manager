@@ -104,7 +104,7 @@ chrome.runtime.onConnect.addListener(function (requestPort) {
 
 function loadGroupMap(callback) {
 
-    if (globalContext.groupMap != null) {
+    if (globalContext.groupMap != null && callback != undefined) {
         callback();
         return;
     }
@@ -134,10 +134,10 @@ function handleMessages(msg) {
     switch (msg.command) {
         case "get-loaded-groups": {
             console.log("load groups command processing...");
-            console.log(globalContext.groupMap);
+            console.log(globalContext.groupMap.groups);
 
             loadGroupMap(function () {
-                port.postMessage({ command: msg.command, data: globalContext.groupMap });
+                port.postMessage({ command: msg.command, data: globalContext.groupMap.groups });
             });
 
             break;
@@ -158,9 +158,9 @@ function handleMessages(msg) {
         case "add-group-extension": {
             //var group = new Group(msg.data.group);
             var group = APIFactory.groupFactory(msg.data.group);
-            globalContext.groupMap.replaceGroup(group._groupName, group);
+            globalContext.groupMap.replaceGroup(group.groupName, group);
             globalContext.groupMap.save();
-            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group } })
+            port.postMessage({ command: msg.command, data: { status: true, ext: msg.data.ext, group: group.toObject } })
             break;
         }
         case "add-new-group": {

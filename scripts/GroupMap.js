@@ -41,6 +41,17 @@ GroupMap.prototype.hasGroups = function () {
     return this.groups != null && this.groups.length > 0;
 }
 
+GroupMap.prototype.groups = function () { 
+    let result = Array.from(this._groups.values());
+    result.forEach((group) => {
+        group.groupName = group._groupName;
+        group.directory = group._directory;
+        group.extensionList = group.extensions();
+    });
+    return result;
+}
+
+
 GroupMap.prototype.selfReference = function () {
     console.log(this);
     return this;

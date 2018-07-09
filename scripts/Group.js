@@ -26,6 +26,15 @@ Group.prototype.hasExtension = function (extension) {
     return this.extensionList.includes(extension);
 }
 
+Group.prototype.directory = function() {
+    return this.directory;
+}
+
+Group.prototype.groupName = function() {
+    return this.groupName;
+}
+
+
 Group.prototype.addExtension = function (extension) {
     if (this.hasExtension(extension)) 
         return false;

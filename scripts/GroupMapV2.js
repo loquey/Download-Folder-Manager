@@ -20,8 +20,12 @@ class GroupMapV2 {
         this.flattenGroups();
     }
 
-    hasGroups() {
+    get hasGroups() {
         return this._groups != null && this._groups.size > 0;
+    }
+
+    get groups() { 
+        return Array.from(this._groups.values()).map((group) => { return group.toObject;});
     }
 
     load(callback) {
@@ -45,20 +49,20 @@ class GroupMapV2 {
     addGroupObjectsToMap(groupObjects) {
         groupObjects.forEach(group => {
             let tmpGroup = APIFactory.groupFactory(group);
-            this._groups.set(tmpGroup.groupName(), tmpGroup);
+            this._groups.set(tmpGroup.groupName, tmpGroup);
         });
     }
 
     addGroupTypesToMap(groupTypes) {
         groupTypes.forEach(group => {
-            this._groups.set(group.groupName(), group);
+            this._groups.set(group.groupName, group);
         })
     }
 
     save() {
         let groups = Array.from(this._groups.values());
 
-        chrome.storage.sync.set({ "maps": groups }, function () {
+        chrome.storage.sync.set({ "maps": this.groups }, function () {
             if (chrome.runtime.lastError != undefined) {
                 console.log(runtime.lastError);
                 return;
@@ -77,7 +81,7 @@ class GroupMapV2 {
 
     flattenGroup(group) {
         group.extensions().forEach(ext => {
-            this._extensionMap.set(ext, group.directory());
+            this._extensionMap.set(ext, group.directory);
         });
     }
 
@@ -103,13 +107,13 @@ class GroupMapV2 {
 
     //add group extensions to flattend structure 
     addGroup(group) {
-        var found = this._groups[group.groupName()];
+        var found = this._groups[group.groupName];
 
         if (found != undefined) {
             return false;
         }
 
-        this._groups.set(group.groupName(), group);
+        this._groups.set(group.groupName, group);
         this.flattenGroup(group);
         return true;
     }
@@ -143,16 +147,16 @@ class GroupMapV2 {
     //     });
     // }
 
-    // findGroup(groupName) {
-    //     return this._groups.find(function (iter) {
-    //         return iter.groupName == groupName
-    //     });
-    // }
+    findGroup(groupName) {
+        return this._groups.get(groupName);
+    }
 
-    // replaceGroup(groupName, newGroup) {
-    //     var oldGroupIndex = this.findGroupIndex(groupName);
-    //     this._groups.splice(oldGroupIndex, 1, newGroup);
-    // }
+    replaceGroup(groupName, newGroup) {
+        //this._groups.delete(groupName);
+        this._groups.set(groupName, newGroup);
+        // var oldGroupIndex = this.findGroupIndex(groupName);
+        // this._groups.splice(oldGroupIndex, 1, newGroup);
+    }
 
    
 }

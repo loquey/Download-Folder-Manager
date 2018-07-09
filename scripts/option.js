@@ -9,7 +9,7 @@ $(function () {
 
     initPort();
     loadGroups();
-    $("#save").click(function () {6
+    $("#save").click(function () {
         var groupName = $("#groupname").val().trim();
         var groupDirectory = $("#directory").val().trim();
         var groupExtensions = $("#extensions").val().trim();
@@ -41,7 +41,8 @@ function routeMessage(msg) {
         case "get-loaded-groups": {
             console.log(msg.data);
             console.log("loaded group response");
-            globalContext.groupMap = new GroupMap({ groupObjects: msg.data.groups });
+            globalContext.groupMap = APIFactory.groupMapFactory({ groupObjects: msg.data });
+            console.log(globalContext.groupMap);
             renderGroups(globalContext.groupMap);
             hookEventHandlers();
             break;
@@ -51,16 +52,18 @@ function routeMessage(msg) {
             break;
         }
         case "delete-group-extension": {
+            console.log(`Extension deleted response ${msg.data.status}`);
+            console.log(msg);
             if (msg.data.status) {
-                $("div[data-dm-groupname='" + msg.data.group.groupName + "'] a[data-dm-ext='" + msg.data.ext + "']").remove();
+                $(`div[data-dm-groupname='${msg.data.group.groupName}'] a[data-dm-ext='${msg.data.ext}']`).remove();
             }
             break;
         }
         case "add-group-extension": {
+            console.log(msg);
             if (msg.data.status) {
                 var btn = extensionToButton(msg.data.ext);
-                group = globalContext.groupMap.search(msg.data.ext);
-                $("div[data-dm-groupname='" + group.groupName + "'] div:nth-child(2)").append(btn);
+                $(`div[data-dm-groupname='${msg.data.group.groupName}'] div:nth-child(2)`).append(btn);
             }
             hookEventHandlers();
             break;
@@ -151,7 +154,11 @@ function addExtensionButton(groupName) {
 
 function hookEventHandlers() {
     $("a[data-dm-act='adde']").click(function (event) {
-        var ext = prompt("Extension suffix", "").trim();
+        var ext = prompt("Extension suffix", "")
+        
+        if (ext == null) return; 
+        
+        ext = ext.trim();
         if (ext.length < 3) {
             return;
         }
@@ -163,7 +170,7 @@ function hookEventHandlers() {
         }
 
         if (group.addExtension(ext)) {
-            globalContext.port.postMessage({ command: "add-group-extension", data: { group: group, ext: ext } });
+            globalContext.port.postMessage({ command: "add-group-extension", data: { group: group.toObject, ext: ext } });
         }else {
             alert("Group already contains extension");
         }
@@ -186,7 +193,7 @@ function hookEventHandlers() {
         }
 
         if (group.removeExtension(target.attr("data-dm-ext"))) {
-            globalContext.port.postMessage({ command: "delete-group-extension", data: { group: group, ext: target.attr("data-dm-ext") } });
+            globalContext.port.postMessage({ command: "delete-group-extension", data: { group: group.toObject, ext: target.attr("data-dm-ext") } });
         }
         else {
             alert("Last extension can't be removed, try deleting group instead");
