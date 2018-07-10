@@ -11,11 +11,62 @@
 
 </head>
 
-<body>
-    <main></main>
-<header>Download Manager</header>
+<body class="ui container grid">
+    <header class="row">
+        <div class="left floated four wide column">Download Manager</div>
+        <div class="right floated column">Add Group</div>
+    </header>
+    <main class="row" >
 
-<footer></footer>
+        <section class="">
+            <details>
+                <header>
+                    <div>Group Name</div>
+                    <div>Add Extension</div>
+                </header>
+                <div>
+                    <div>exe</div>
+                    <div>msi</div>
+                </div>
+                <footer>Directory</footer>
+            </details>
+            <details>
+                <header>
+                    <div>Group Name</div>
+                    <div>Add Extension</div>
+                </header>
+                <div>
+                    <div>exe</div>
+                    <div>msi</div>
+                </div>
+                <footer>Directory</footer>
+            </details>
+        </section>
+
+
+    </main>
+
+    <aside class="row">
+        <header>Add Group</header>
+        <label for="groupname">Group Name</label>
+        <input type="text" name="groupname" id="groupname">
+        <label for="directory">Directory</label>
+        <input type="text" name="directory" id="directory">
+        <label for="extensions">Extensions</label>
+        <input type="text" name="extensions" id="extensions">
+        <button>Add Group</button>
+    </aside>
+
+    <aside class="row">
+        <header>Add Extension</header>
+        <div>Add extensions separated by comma (,)</div>
+        <label for="groupextensions">Extensions</label>
+        <input type="text" name="groupextensions" id="groupextensions">
+        <button>Add Group</button>
+        <button>Add Extensions</button>
+    </aside>
+    <footer class="row">&copy;Titilope Asare</footer>
+
     <script src="/scripts/semantic.min.js"></script>
     <script src="/scripts/option-new.js"></script>
 </body>
