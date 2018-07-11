@@ -11,61 +11,78 @@
 
 </head>
 
-<body class="ui container grid">
-    <header class="row">
-        <div class="left floated four wide column">Download Manager</div>
-        <div class="right floated column">Add Group</div>
+<body>
+    <header class="ui two column centered grid">
+        <div class="center aligned column">
+            Download Manager Settings
+        </div>
     </header>
-    <main class="row" >
-
-        <section class="">
-            <details>
-                <header>
-                    <div>Group Name</div>
-                    <div>Add Extension</div>
+    <main class="ui container grid">
+        <header class="row">
+            <div class="left floated three wide column">Download Manager</div>
+            <div class="right floated two wide column">Add Group</div>
+        </header>
+        <!-- <section class="ui row grid"> -->
+            <div class="row">
+                <header class="">
+                    <div class="left floated four wide column">Group Name</div>
+                    <div class="right floated two wide column">Add Extension</div>
                 </header>
-                <div>
+                <div class="">
                     <div>exe</div>
                     <div>msi</div>
                 </div>
-                <footer>Directory</footer>
-            </details>
-            <details>
-                <header>
+                <footer class="row">Directory</footer>
+            </div>
+            <!-- <div class="ui row grid">
+                <header class="row">
                     <div>Group Name</div>
                     <div>Add Extension</div>
                 </header>
-                <div>
+                <div class="row">
                     <div>exe</div>
                     <div>msi</div>
                 </div>
-                <footer>Directory</footer>
-            </details>
-        </section>
+                <foote class="row"r>Directory</footer>
+            </div> -->
+        <!-- </section> -->
 
+        <!-- <aside class="row">
+            <header>Add Group</header>
+            <label for="groupname">Group Name</label>
+            <input type="text" name="groupname" id="groupname">
+            <label for="directory">Directory</label>
+            <input type="text" name="directory" id="directory">
+            <label for="extensions">Extensions</label>
+            <input type="text" name="extensions" id="extensions">
+            <button>Add Group</button>
+        </aside>
 
+        <aside class="row">
+            <header>Add Extension</header>
+            <div>Add extensions separated by comma (,)</div>
+            <label for="groupextensions">Extensions</label>
+            <input type="text" name="groupextensions" id="groupextensions">
+            <button>Add Group</button>
+            <button>Add Extensions</button>
+        </aside> -->
+        <!-- <footer class="row">&copy;Titilope Asare</footer> -->
     </main>
 
-    <aside class="row">
-        <header>Add Group</header>
-        <label for="groupname">Group Name</label>
-        <input type="text" name="groupname" id="groupname">
-        <label for="directory">Directory</label>
-        <input type="text" name="directory" id="directory">
-        <label for="extensions">Extensions</label>
-        <input type="text" name="extensions" id="extensions">
-        <button>Add Group</button>
-    </aside>
 
-    <aside class="row">
-        <header>Add Extension</header>
-        <div>Add extensions separated by comma (,)</div>
-        <label for="groupextensions">Extensions</label>
-        <input type="text" name="groupextensions" id="groupextensions">
-        <button>Add Group</button>
-        <button>Add Extensions</button>
-    </aside>
-    <footer class="row">&copy;Titilope Asare</footer>
+    <!-- <div class="ui three column grid">
+        <div class="row">
+          <div class="eight wide column">column two</div>
+          <div class="column">column</div>
+          <div class="column">column</div>
+        </div>
+        <div class="column">column</div>
+        <div class="column">column</div>
+        <div class="column">column</div>
+        <div class="column">column</div>
+        <div class=" column">columncolumncolumncolumn</div>
+        
+      </div> -->
 
     <script src="/scripts/semantic.min.js"></script>
     <script src="/scripts/option-new.js"></script>
