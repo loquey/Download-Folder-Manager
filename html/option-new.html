@@ -12,28 +12,6 @@
 </head>
 
 <body>
-    <!-- <aside class="row">
-            <header>Add Group</header>
-            <label for="groupname">Group Name</label>
-            <input type="text" name="groupname" id="groupname">
-            <label for="directory">Directory</label>
-            <input type="text" name="directory" id="directory">
-            <label for="extensions">Extensions</label>
-            <input type="text" name="extensions" id="extensions">
-            <button>Add Group</button>
-        </aside>
-
-        <aside class="row">
-            <header>Add Extension</header>
-            <div>Add extensions separated by comma (,)</div>
-            <label for="groupextensions">Extensions</label>
-            <input type="text" name="groupextensions" id="groupextensions">
-            <button>Add Group</button>
-            <button>Add Extensions</button>
-        </aside> -->
-
-
-
     <div class="ui segment container">
         <header class="ui top attached label ">
             <i class="settings icon"></i>
@@ -45,17 +23,17 @@
             Add Group
         </a>
 
-        <!-- Group mackup start-->
+        <!-- Group markup start-->
         <div class="ui  segments">
             <div class="ui top attached block header">
                 <i class="object group icon"></i>
                 Group name
             </div>
             <div class="ui segment">
-                <div class="ui blue right bottom right attached label no-lower-right">
+                <a class="ui blue right bottom right attached label no-lower-right">
                     <i class="right plus circle icon"></i>
                     Add Extension
-                </div>
+                </a>
                 <div class="ui right labeled icon button">
                     <i class="right close icon"></i>
                     exe
@@ -71,27 +49,72 @@
             </div>
         </div>
         <!-- Group markup end -->
-
         <br />
-
         <footer class="ui bottom attached label">&copy;Titilope Asare</footer>
-
-
     </div>
 
-    <aside class="ui modal new-group-form">
-        <header class="ui top attached label">Add Group</header>
-        <div class="ui segment">
-                <label for="groupname">Group Name</label>
-                <input type="text" name="groupname" id="groupname">
-                <label for="directory">Directory</label>
-                <input type="text" name="directory" id="directory">
-                <label for="extensions">Extensions</label>
-                <input type="text" name="extensions" id="extensions">
-                <button>Add Group</button>
-        </div>
-       
+
+    <!-- New Group form start -->
+    <aside class="ui modal  new-group-form">
+        <i class="close icon"></i>
+        <header class="header">New Group</header>
+        <main class="content">
+
+            <div class="ui labeled basic segment fluid input">
+                <label for="groupname" class="ui label">Group Name</label>
+                <input placeholder="Group Name" type="text" name="groupname" id="groupname">
+            </div>
+            <div class="ui labeled basic segment fluid input">
+                <label for="directory" class="ui label">
+                    Directory
+                </label>
+                <input placeholder="Relative path" type="text" name="directory" id="directory">
+            </div>
+            <div class="ui labeled basic segment fluid input">
+                <label for="extensions" class="ui label">
+                    Extensions
+                </label>
+                <input placeholder="Extensions" type="text" name="groupname" id="groupname">
+            </div>
+        </main>
+        <footer class="actions">
+            <button class="ui negative right labeled icon button">
+                Cancel
+                <i class="cancel icon"></i>
+            </button>
+            <button class="ui positive right labeled icon button">
+                Save
+                <i class="checkmark icon"></i>
+            </button>
+        </footer>
     </aside>
+    <!-- New group form end -->
+
+    <!-- New Extension form start -->
+
+    <aside class="ui modal  new-extension-form">
+        <i class="close icon"></i>
+        <header class="header">New Extension</header>
+        <main class="content">
+            <div class="ui labeled basic segment fluid input">
+                <label for="directory" class="ui label">
+                    Extension List
+                </label>
+                <input  placeholder="Extenstions separated by comma" type="text" name="groupextensions" id="groupextensions">
+            </div>
+        </main>
+        <footer class="actions">
+            <button class="ui negative right labeled icon button">
+                Cancel
+                <i class="cancel icon"></i>
+            </button>
+            <button class="ui positive right labeled icon button">
+                Save
+                <i class="checkmark icon"></i>
+            </button>
+        </footer>
+    </aside>
+    <!-- New Extension form end -->
 
     <script src="/scripts/jquery.js" type="text/javascript"></script>
     <script src="/scripts/semantic.min.js"></script>
