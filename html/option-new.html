@@ -12,109 +12,6 @@
 </head>
 
 <body>
-    <!-- 
-    <main class="ui container grid">
-
-        <header class="row red block">
-            <div class="left floated three wide column">
-                Download Manager
-            </div>
-            <div class="right floated three wide column">
-                <a class="ui blue right ribbon label">
-                    <i class="plus circle icon"></i> Add Group</a>
-            </div>
-        </header>
-
-        <section class="row equal width">
-            <div class="fifteen wide column centered">
-                <div class="ui grid">
-                    <header class="row green">
-                        <div class="left floated two wide column">Group Name</div>
-                        <div class="right floated four wide column">
-                            <button class="ui blue right ribbon label">
-                                <i class="right large plus circle icon"></i>
-                                Add Extension
-                            </button>
-                        </div>
-                    </header>
-                    <div class="row">
-                        <div>
-                            <button class="ui right labeled icon button">
-                                <i class="right window close icon"></i>
-                                exe
-                            </button>
-                        </div>
-                        <div>
-                            <button class="ui right labeled icon button">
-                                <i class="right window close icon"></i>
-                                msi
-                            </button>
-                        </div>
-
-                    </div>
-                    <footer class="row green">
-                        <div>Directory</div>
-                    </footer>
-                </div>
-                <div class="ui grid">
-                    <header class="row">
-                        <div class="left floated two wide column">Group Name</div>
-                        <div class="right floated four wide column">
-                            <button class="ui blue right ribbon label">
-                                <i class="right large plus circle icon"></i>
-                                Add Extension
-                            </button>
-                        </div>
-                    </header>
-                    <div class="row">
-                        <div>
-                            <button class="ui right labeled icon button">
-                                <i class="right window close icon"></i>
-                                exe
-                            </button>
-                        </div>
-                        <div>
-                            <button class="ui right labeled icon button">
-                                <i class="right window close icon"></i>
-                                msi
-                            </button>
-                        </div>
-
-                    </div>
-                    <footer class="row">Directory</footer>
-                </div>
-
-
-                <div class="ui grid">
-                    <header class="row">
-                        <div class="left floated two wide column">Group Name</div>
-                        <div class="right floated two wide column">Add Extension</div>
-                    </header>
-                    <div class="row">
-                        <div class="column">exe</div>
-                        <div class="column">msi</div>
-                    </div>
-                    <footer class="row">Directory</footer>
-                </div>
-
-                <div class="ui grid">
-                    <header class="row">
-                        <div class="left floated two wide column">Group Name</div>
-                        <div class="right floated two wide column">Add Extension</div>
-                    </header>
-                    <div class="row">
-                        <div class="column">exe</div>
-                        <div class="column">msi</div>
-                    </div>
-                    <footer class="row">Directory</footer>
-                </div>
-            </div>
-        </section>
-
-    </main>
-     -->
-
-
     <!-- <aside class="row">
             <header>Add Group</header>
             <label for="groupname">Group Name</label>
@@ -136,68 +33,67 @@
         </aside> -->
 
 
-    <!-- <header class="ui centered padded block header grid">
-        Download Manager Settings
-    </header>
 
     <div class="ui segment container">
-        <div class="ui top attached label "></div>
-        <div class="ui segment"></div>
-        <div class="ui bottom attached label"></div>
-    </div>
+        <header class="ui top attached label ">
+            <i class="settings icon"></i>
+            Download Manager Settings
+        </header>
 
+        <a class="ui top right ribbon label add-group">
+            <i class="right large plus circle icon"></i>
+            Add Group
+        </a>
 
-
-    <footer class="ui centered padded block header grid">
-        &copy;Titilope Asare
-    </footer> -->
-
-
-    <div class="ui segment container">
-        <header class="ui top attached centered block label ">  Download Manager Settings</header>
-        <div class="ui segment"></div>
-        <div class="ui bottom attached label"></div>
-        
-    </div>
-
-
-    <div class="ui two column grid">
-
-        <div class="column">
-
+        <!-- Group mackup start-->
+        <div class="ui  segments">
+            <div class="ui top attached block header">
+                <i class="object group icon"></i>
+                Group name
+            </div>
+            <div class="ui segment">
+                <div class="ui blue right bottom right attached label no-lower-right">
+                    <i class="right plus circle icon"></i>
+                    Add Extension
+                </div>
+                <div class="ui right labeled icon button">
+                    <i class="right close icon"></i>
+                    exe
+                </div>
+                <div class="ui right labeled icon button">
+                    <i class="right close icon"></i>
+                    exe
+                </div>
+            </div>
+            <div class="ui bottom attached block header">
+                <i class="folder icon"></i>
+                Directory
+            </div>
         </div>
-        <div class="column">
-            <div class="ui block header">
-                <i class="settings icon"></i>
-                <div class="content">
-                    Block
-                    <div class="sub header">Sub-header</div>
-                </div>
-            </div>
+        <!-- Group markup end -->
 
-            <div class="ui dividing header">
-                <i class="settings icon"></i>
-                <div class="content">
-                    Dividing
-                    <div class="sub header">Sub-header</div>
-                </div>
-            </div>
+        <br />
 
-            <div class="ui teal dividing header">
-                <i class="settings icon"></i>
-                <div class="content">
-                    Color
-                    <div class="sub header">Sub-header</div>
-                </div>
-            </div>
+        <footer class="ui bottom attached label">&copy;Titilope Asare</footer>
 
-            <div class="ui top attached block header">Attached</div>
-            <div class="ui attached segment"></div>
-            <div class="ui bottom attached header">Attached</div>
-        </div>
+
     </div>
 
+    <aside class="ui modal new-group-form">
+        <header class="ui top attached label">Add Group</header>
+        <div class="ui segment">
+                <label for="groupname">Group Name</label>
+                <input type="text" name="groupname" id="groupname">
+                <label for="directory">Directory</label>
+                <input type="text" name="directory" id="directory">
+                <label for="extensions">Extensions</label>
+                <input type="text" name="extensions" id="extensions">
+                <button>Add Group</button>
+        </div>
+       
+    </aside>
 
+    <script src="/scripts/jquery.js" type="text/javascript"></script>
     <script src="/scripts/semantic.min.js"></script>
     <script src="/scripts/option-new.js"></script>
 </body>

@@ -5,3 +5,7 @@
 /* header { 
     border: 1px solid pink;
 } */
+
+.no-lower-right {
+    border-bottom-right-radius: 0px !important;
+}
