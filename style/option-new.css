@@ -9,3 +9,7 @@
 .no-lower-right {
     border-bottom-right-radius: 0px !important;
 }
+
+.row-spacing { 
+    margin-bottom: 10px !important;
+}
