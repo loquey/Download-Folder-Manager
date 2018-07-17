@@ -2,21 +2,31 @@ APIFactory.initAPI();
 
 var globalContext = {
     groupMap: {},
-    port: {}
+    port: {}, 
+    newGroupForm : null, 
+    newGroupFormModal : null, 
 };
 
 
 
 (function ($) {
     $(function () {
+        initCache();
         initPort();
         loadGroups();
-        //hookEventHandlers($);
+        hookEventHandlers($);
     });
 })(jQuery)
 
+function initCache() {
+    globalContext.newGroupForm = $(".new-group-form");
+    globalContext.newGroupFormModal = $(".new-group-form-modal");
+}
+
 function initPort() {
-    globalContext.port = chrome.runtime.connect({ name: "conn" });
+    globalContext.port = chrome.runtime.connect({
+        name: "conn"
+    });
     globalContext.port.onMessage.addListener(function (msg) {
         routeMessage(msg);
     });
@@ -24,7 +34,9 @@ function initPort() {
 
 function loadGroups() {
     console.log("Load groups command sent");
-    globalContext.port.postMessage({ "command": "get-loaded-groups" });
+    globalContext.port.postMessage({
+        "command": "get-loaded-groups"
+    });
 }
 
 function hookEventHandlers($) {
@@ -40,10 +52,10 @@ function renderGroups(groupMap) {
 function renderGroupsToTableRow(item, index) {
     return `
         <div class="ui  segments">
-            <div class="ui top attached block header">
-                <i class="object group icon"></i>
-                ${item.groupName}
-                <i class="object group icon"></i>
+            <div class="ui top attached block header grid no-top-padding">
+                <i class="object group icon column"></i>
+                <i class="two wide column">${item.groupName}</i>
+                <i class="ui circle close icon right floated column"></i>
             </div>
             <div class="ui segment">
                 <a class="ui blue right bottom right attached label no-lower-right">
@@ -94,78 +106,144 @@ function appendTableRows(rows) {
 
 function routeMessage(msg) {
     switch (msg.command) {
-        case "get-loaded-groups": {
-            console.log(msg.data);
-            console.log("loaded group response");
-            globalContext.groupMap = APIFactory.groupMapFactory({ groupObjects: msg.data });
-            console.log(globalContext.groupMap);
-            renderGroups(globalContext.groupMap);
-            //hookEventHandlers();
-            break;
-        }
-        case "delete-group": {
-            console.log("Group deleted " + msg.data);
-            break;
-        }
-        case "delete-group-extension": {
-            console.log(`Extension deleted response ${msg.data.status}`);
-            console.log(msg);
-            if (msg.data.status) {
-                $(`div[data-dm-groupname='${msg.data.group.groupName}'] a[data-dm-ext='${msg.data.ext}']`).remove();
+        case "get-loaded-groups":
+            {
+                console.log(msg.data);
+                console.log("loaded group response");
+                globalContext.groupMap = APIFactory.groupMapFactory({
+                    groupObjects: msg.data
+                });
+                console.log(globalContext.groupMap);
+                renderGroups(globalContext.groupMap);
+                //hookEventHandlers();
+                break;
             }
-            break;
-        }
-        case "add-group-extension": {
-            console.log(msg);
-            if (msg.data.status) {
-                var btn = extensionToButton(msg.data.ext);
-                $(`div[data-dm-groupname='${msg.data.group.groupName}'] div:nth-child(2)`).append(btn);
+        case "delete-group":
+            {
+                console.log("Group deleted " + msg.data);
+                break;
             }
-            hookEventHandlers();
-            break;
-        }
-        case "add-new-group": {
-            if (!msg.data.status) {
-                alert(msg.data.statusMsg);
-                return;
+        case "delete-group-extension":
+            {
+                console.log(`Extension deleted response ${msg.data.status}`);
+                console.log(msg);
+                if (msg.data.status) {
+                    $(`div[data-dm-groupname='${msg.data.group.groupName}'] a[data-dm-ext='${msg.data.ext}']`).remove();
+                }
+                break;
             }
+        case "add-group-extension":
+            {
+                console.log(msg);
+                if (msg.data.status) {
+                    var btn = extensionToButton(msg.data.ext);
+                    $(`div[data-dm-groupname='${msg.data.group.groupName}'] div:nth-child(2)`).append(btn);
+                }
+                hookEventHandlers();
+                break;
+            }
+        case "add-new-group":
+            {
+                if (!msg.data.status) {
+                    alert(msg.data.statusMsg);
+                    return;
+                }
 
-            var group = new Group(msg.data.group);
-            globalContext.groupMap.addGroup(group);
-            appendTableRows(renderGroupsToTableRow(group));
-            hookEventHandlers();
-            break;
-        }
-        default: {
-            console.log("Unknown command: " + msg.command);
-        }
+                var group = APIFactory.groupFactory(msg.data.group);
+                globalContext.groupMap.addGroup(group);
+                appendTableRows(renderGroupsToTableRow(group));
+                
+                //shouldn't rehook add group event handler
+                hookEventHandlers($);
+                break;
+            }
+        default:
+            {
+                console.log("Unknown command: " + msg.command);
+            }
     }
 }
 
 function groupModalSetup($) {
+    groupModalFormValidationSetup($);
+
     $(".add-group").click(() => {
-        $(".new-group-form")
+        globalContext.newGroupFormModal
             .modal({
                 closable: false,
-                onDeny: () => {
-                    // clear form field
-                },
                 onApprove: () => {
-                    //approved function call here
+                    if (!globalContext.newGroupForm.form("validate form")) {
+                        return false;
+                    }
+
+                    let groupName = document.forms["newgroup"]["groupname"].value.trim();
+                    let directory = document.forms["newgroup"]["directory"].value.trim();
+                    let extensions = document.forms["newgroup"]["extensions"].value.trim();
+
+                    return saveGroup(groupName, directory, extensions);
                 },
-                transition: 'fade up'
+                onHidden: () => {
+                    globalContext.newGroupForm.form('reset');
+                    $(".ui.error.message").children().remove();
+                },
+                transition: 'fade up',
             })
             .modal("show");
     });
 }
 
+function groupModalFormValidationSetup($) {
+    globalContext.newGroupForm
+        .form({
+            fields: {
+                groupname: {
+                    identifier: 'groupname',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please specify {name}'
+                    }]
+                },
+                directory: {
+                    identifier: 'directory',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please specify target {name}'
+                    }]
+                },
+                extensions: {
+                    identifier: 'extensions',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please specify {name} list'
+                    }]
+                },
+            }
+        })
+}
+
+function saveGroup(groupName, directory, extensions) {
+
+    var group = APIFactory.groupFactory({
+        groupName: groupName,
+        directory: directory,
+        extensionList: extensions.split(",")
+    });
+
+    console.log(group);
+    globalContext.port.postMessage({
+        command: "add-new-group",
+        data: group.toObject
+    });
+    return true;
+}
+
 function extensionModalSetup($) {
     $(".add-group").click(() => {
-        $(".new-group-form")
+        $(".new-extension-form")
             .modal({
                 closable: false,
                 onDeny: () => {
-                    // clear form field
+                    document.forms["newgroup"].reset()
                 },
                 onApprove: () => {
                     //approved function call here

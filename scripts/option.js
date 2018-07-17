@@ -19,7 +19,7 @@ $(function () {
             return;
         }
 
-        var group = new Group({
+        var group = APIFactory.groupFactory({
             groupName: groupName,
             directory: groupDirectory,
             extensionList: groupExtensions.split(",")
@@ -74,7 +74,7 @@ function routeMessage(msg) {
                 return;
             }
 
-            var group = new Group(msg.data.group);
+            var group = APIFactory.groupFactory(msg.data.group);
             globalContext.groupMap.addGroup(group);
             appendTableRows(renderGroupsToTableRow(group));
             hookEventHandlers();

@@ -5,6 +5,7 @@ class GroupV2 {
         }
 
         if (options.groupName == undefined || options.directory == undefined || !Array.isArray(options.extensionList)) {
+            console.log(options);
             throw "Invalid group object, misssing group data";
         }
 
@@ -34,7 +35,7 @@ class GroupV2 {
     }
 
     addExtensions(extensions) {
-        extension.forEach(e => { this._extensionList.add(e); });
+        extensions.forEach(e => { this._extensionList.add(e); });
     }
 
     removeExtension(extension) {

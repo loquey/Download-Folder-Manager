@@ -13,3 +13,8 @@
 .row-spacing { 
     margin-bottom: 10px !important;
 }
+
+.no-top-padding {
+    padding-top : 0rem !important;
+    padding-bottom: 0rem !important;
+}

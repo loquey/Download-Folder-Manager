@@ -176,7 +176,7 @@ function handleMessages(msg) {
             }
 
             globalContext.groupMap.save();
-            port.postMessage({ command: "add-new-group", data: { status: status, statusMsg: statusMsg, group: group } });
+            port.postMessage({ command: "add-new-group", data: { status: status, statusMsg: statusMsg, group: group.toObject } });
             break;
         }
         default: {

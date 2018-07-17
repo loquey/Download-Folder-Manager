@@ -27,9 +27,11 @@
         <!-- Group markup start-->
         <div class="group-list">
             <!-- <div class="ui  segments">
-                <div class="ui top attached block header">
-                    <i class="object group icon"></i>
-                    Group name
+                
+                <div class="ui top attached block header grid no-top-padding">
+                    <i class="object group icon column"></i>
+                    <i class="two wide column">Group Name</i>
+                    <i class="ui circle close icon right floated column"></i>
                 </div>
                 <div class="ui segment">
                     <a class="ui blue right bottom right attached label no-lower-right">
@@ -58,27 +60,30 @@
 
 
     <!-- New Group form start -->
-    <aside class="ui modal  new-group-form">
+    <aside class="ui modal  new-group-form-modal">
         <i class="close icon"></i>
         <header class="header">New Group</header>
         <main class="content">
-
-            <div class="ui labeled basic segment fluid input">
-                <label for="groupname" class="ui label">Group Name</label>
-                <input placeholder="Group Name" type="text" name="groupname" id="groupname">
-            </div>
-            <div class="ui labeled basic segment fluid input">
-                <label for="directory" class="ui label">
-                    Directory
-                </label>
-                <input placeholder="Relative path" type="text" name="directory" id="directory">
-            </div>
-            <div class="ui labeled basic segment fluid input">
-                <label for="extensions" class="ui label">
-                    Extensions
-                </label>
-                <input placeholder="Extensions" type="text" name="groupname" id="groupname">
-            </div>
+            <form id="newgroup" class="ui form new-group-form">
+                    <div class="ui error message"></div>
+                <div class="ui labeled basic segment fluid field input">
+                    <label for="groupname" class="ui label">Group Name</label>
+                    <input placeholder="Group Name" type="text" name="groupname" id="groupname" required>
+                </div>
+                <div class="ui labeled basic segment fluid field input">
+                    <label for="directory" class="ui label">
+                        Directory
+                    </label>
+                    <input placeholder="Relative path" type="text" name="directory" id="directory" required>
+                </div>
+                <div class="ui labeled basic segment field fluid input">
+                    <label for="extensions" class="ui label">
+                        Extensions
+                    </label>
+                    <input placeholder="Extensions" type="text" name="extensions" id="extensions" required>
+                </div>
+                
+            </form>
         </main>
         <footer class="actions">
             <button class="ui negative right labeled icon button">
@@ -99,7 +104,7 @@
         <i class="close icon"></i>
         <header class="header">New Extension</header>
         <main class="content">
-            <div class="ui labeled basic segment fluid input">
+            <div class="ui labeled basic segment fluid field input">
                 <label for="directory" class="ui label">
                     Extension List
                 </label>
