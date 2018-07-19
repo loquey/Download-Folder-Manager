@@ -2,9 +2,9 @@ APIFactory.initAPI();
 
 var globalContext = {
     groupMap: {},
-    port: {}, 
-    newGroupForm : null, 
-    newGroupFormModal : null, 
+    port: {},
+    newGroupForm: null,
+    newGroupFormModal: null,
 };
 
 
@@ -14,7 +14,8 @@ var globalContext = {
         initCache();
         initPort();
         loadGroups();
-        hookEventHandlers($);
+        groupModalSetup($);
+        
     });
 })(jQuery)
 
@@ -40,9 +41,33 @@ function loadGroups() {
 }
 
 function hookEventHandlers($) {
-    groupModalSetup($);
+    hookDeleteGroupHandlers($)
+    //hook group delete handler 
+    //hook add extension handler 
+    //hook delete extension handler 
     //extensionModalSetup($);
 }
+
+function hookDeleteGroupHandlers($) {
+    $(".delete-group").click(function() {
+        let groupName = $(this).attr("data-dm-groupname");
+        globalContext.port.postMessage({
+            command: "delete-group",
+            data: groupName
+        });
+        globalContext.groupMap.deleteGroup({
+            groupName: groupName
+        });
+        $(`div[data-dm-groupfor='${groupName}']`).remove();
+    });
+}
+
+function hookAddExtensionHandler($) {
+    $("").click(function() {
+
+    });
+}
+
 
 function renderGroups(groupMap) {
     var rows = groupMap.render(renderGroupsToTableRow);
@@ -51,11 +76,11 @@ function renderGroups(groupMap) {
 
 function renderGroupsToTableRow(item, index) {
     return `
-        <div class="ui  segments">
+        <div class="ui  segments" data-dm-groupfor="${item.groupName}">
             <div class="ui top attached block header grid no-top-padding">
                 <i class="object group icon column"></i>
                 <i class="two wide column">${item.groupName}</i>
-                <i class="ui circle close icon right floated column"></i>
+                <i class="ui circle close icon right floated column delete-group" data-dm-groupname="${item.groupName}"></i>
             </div>
             <div class="ui segment">
                 <a class="ui blue right bottom right attached label no-lower-right">
@@ -115,7 +140,7 @@ function routeMessage(msg) {
                 });
                 console.log(globalContext.groupMap);
                 renderGroups(globalContext.groupMap);
-                //hookEventHandlers();
+                hookDeleteGroupHandlers($);
                 break;
             }
         case "delete-group":
@@ -152,7 +177,7 @@ function routeMessage(msg) {
                 var group = APIFactory.groupFactory(msg.data.group);
                 globalContext.groupMap.addGroup(group);
                 appendTableRows(renderGroupsToTableRow(group));
-                
+
                 //shouldn't rehook add group event handler
                 hookEventHandlers($);
                 break;
