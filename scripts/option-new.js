@@ -69,13 +69,13 @@ function renderGroups(groupMap) {
 
 function renderGroupsToTableRow(item, index) {
     return `
-        <div class="ui  segments" data-dm-groupfor="${item.groupName}">
+        <div class="ui column" data-dm-groupfor="${item.groupName}">
             <div class="ui top attached block header grid no-top-padding">
                 <i class="object group icon column"></i>
                 <i class="two wide column">${item.groupName}</i>
                 <i class="ui circle close icon right floated column delete-group" data-dm-groupname="${item.groupName}"></i>
             </div>
-            <div class="ui segment" data-dm-group-extensions="${item.groupName}">
+            <div class="ui attached segment" data-dm-group-extensions="${item.groupName}">
                 <a class="ui blue right bottom right attached label no-lower-right add-extension" data-dm-groupname="${item.groupName}">
                     <i class="right plus circle icon"></i>
                     Add Extension

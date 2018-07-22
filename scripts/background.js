@@ -7,7 +7,7 @@ var globalContext = {
             "pdf", "xls", "doc", "docx", "xlsx", "rtf"
         ],
         "Programs": [
-            "exe", "msi"
+            "exe", "msi", "pkg", "dmg", "deb", "run"
         ],
         "Music": [
             "mp3", 'm4a', "wav", "wma", "flac", "ogg"
