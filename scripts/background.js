@@ -67,7 +67,7 @@ chrome.management.onEnabled.addListener(function (info) {
 
 // ---> fix here as well 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
-    if (!globalContext.groupMap.hasGroups()) {
+    if (!globalContext.groupMap.hasGroups) {
         loadGroupMap((downloadItem, suggest) => {
             console.log(downloadItem);
             suggestDirectory(downloadItem, suggest);
