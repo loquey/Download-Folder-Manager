@@ -68,7 +68,6 @@ function renderGroups(groupMap) {
 }
 
 function renderGroupsToTableRow(item, index) {
-    console.log(item.groupName)
     return `
         <div class="ui  segments" data-dm-groupfor="${item.groupName}">
             <div class="ui top attached block header grid no-top-padding">
@@ -92,9 +91,9 @@ function renderGroupsToTableRow(item, index) {
 
 function extensionToButton(ext) {
     return `
-        <div class="ui label row-spacing">
+        <div class="ui label row-spacing" data-dm-ext="${ext}">
             ${ext}
-            <i class="close icon"></i>
+            <i class="close icon dm-ext"></i>
         </div>`;
 }
 
@@ -115,6 +114,7 @@ function routeMessage(msg) {
                 renderGroups(globalContext.groupMap);
                 hookDeleteGroupHandlers($);
                 hookAddExtensionHandler($);
+                hookDeleteExtensionHandler($);
                 break;
             }
         case "delete-group":
@@ -127,7 +127,7 @@ function routeMessage(msg) {
                 console.log(`Extension deleted response ${msg.data.status}`);
                 console.log(msg);
                 if (msg.data.status) {
-                    $(`div[data-dm-groupname='${msg.data.group.groupName}'] a[data-dm-ext='${msg.data.ext}']`).remove();
+                    $(`div[data-dm-ext='${msg.data.ext}']`).remove();
                 }
                 break;
             }
@@ -139,7 +139,7 @@ function routeMessage(msg) {
                     let btn = extensionToButton(msg.data.ext);
                     $(`div[data-dm-group-extensions='${msg.data.group.groupName}']`).append(btn);
                 }
-                //hook delete extension handler
+                hookDeleteExtensionHandler($);
                 break;
             }
         case "add-new-group":
@@ -152,10 +152,8 @@ function routeMessage(msg) {
                 var group = APIFactory.groupFactory(msg.data.group);
                 globalContext.groupMap.addGroup(group);
                 appendTableRows(renderGroupsToTableRow(group));
-
-                //shouldn't rehook add group event handler
                 hookAddExtensionHandler($);
-                //hook delete extension handlers
+                hookDeleteExtensionHandler($);
                 break;
             }
         default:
@@ -300,4 +298,24 @@ function saveGroupExtension(groupName, extension) {
         return false
     }
 
+}
+
+function hookDeleteExtensionHandler($) {
+    $(".dm-ext").click(function(){
+        let src = $(this);
+        let ext = src.parent().attr("data-dm-ext");
+        let groupName = src.parent().parent().attr("data-dm-group-extensions");
+
+        var group = globalContext.groupMap.findGroup(groupName);
+        if (group == undefined) {
+            return;
+        }
+
+        if (group.removeExtension(ext)) {
+            globalContext.port.postMessage({ command: "delete-group-extension", data: { group: group.toObject, ext: ext } });
+        }
+        else {
+            alert("Last extension can't be removed, try deleting group instead");
+        };
+    })
 }
