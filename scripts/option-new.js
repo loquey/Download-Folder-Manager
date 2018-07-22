@@ -5,6 +5,8 @@ var globalContext = {
     port: {},
     newGroupForm: null,
     newGroupFormModal: null,
+    newExtensionForm: null,
+    newExtensionFormModal: null,
 };
 
 
@@ -15,13 +17,14 @@ var globalContext = {
         initPort();
         loadGroups();
         groupModalSetup($);
-        
     });
 })(jQuery)
 
 function initCache() {
     globalContext.newGroupForm = $(".new-group-form");
     globalContext.newGroupFormModal = $(".new-group-form-modal");
+    globalContext.newExtensionForm = $(".new-extension-form");
+    globalContext.newExtensionFormModal = $(".new-extension-modal");
 }
 
 function initPort() {
@@ -42,14 +45,11 @@ function loadGroups() {
 
 function hookEventHandlers($) {
     hookDeleteGroupHandlers($)
-    //hook group delete handler 
-    //hook add extension handler 
     //hook delete extension handler 
-    //extensionModalSetup($);
 }
 
 function hookDeleteGroupHandlers($) {
-    $(".delete-group").click(function() {
+    $(".delete-group").click(function () {
         let groupName = $(this).attr("data-dm-groupname");
         globalContext.port.postMessage({
             command: "delete-group",
@@ -62,19 +62,13 @@ function hookDeleteGroupHandlers($) {
     });
 }
 
-function hookAddExtensionHandler($) {
-    $("").click(function() {
-
-    });
-}
-
-
 function renderGroups(groupMap) {
     var rows = groupMap.render(renderGroupsToTableRow);
     appendTableRows(rows);
 }
 
 function renderGroupsToTableRow(item, index) {
+    console.log(item.groupName)
     return `
         <div class="ui  segments" data-dm-groupfor="${item.groupName}">
             <div class="ui top attached block header grid no-top-padding">
@@ -82,8 +76,8 @@ function renderGroupsToTableRow(item, index) {
                 <i class="two wide column">${item.groupName}</i>
                 <i class="ui circle close icon right floated column delete-group" data-dm-groupname="${item.groupName}"></i>
             </div>
-            <div class="ui segment">
-                <a class="ui blue right bottom right attached label no-lower-right">
+            <div class="ui segment" data-dm-group-extensions="${item.groupName}">
+                <a class="ui blue right bottom right attached label no-lower-right add-extension" data-dm-groupname="${item.groupName}">
                     <i class="right plus circle icon"></i>
                     Add Extension
                 </a>
@@ -94,22 +88,6 @@ function renderGroupsToTableRow(item, index) {
                 ${item.directory}
             </div>
         </div>`;
-
-    // var row = $("<div class='divTableRow'></div>")
-    // row.attr("data-dm-groupname", item.groupName);
-    // var name = $("<div class='divTableCell'></div>").append(item.groupName);
-    // var ext = $("<div class='divTableCell'></div>").append(item.extensions(extensionToButton));
-    // var dir = $("<div class='divTableCell'></div>").append(item.directory);
-    // var act = $("<div class='divTableCell'></div>")
-    //     .append(addExtensionButton(item.groupName))
-    //     //.append(editGroupButton(item.groupName))
-    //     .append(deleteGroupButton(item.groupName));
-
-    // row.append(name)
-    //     .append(ext)
-    //     .append(dir)
-    //     .append(act);
-    // return row;
 }
 
 function extensionToButton(ext) {
@@ -118,11 +96,6 @@ function extensionToButton(ext) {
             ${ext}
             <i class="close icon"></i>
         </div>`;
-    // var btn = $('<a href="#" class="btn btn-default btn-sm" ></a>');
-    // btn.attr("data-dm-ext", ext);
-    // btn.append(ext);
-    // btn.append('<span class="glyphicon glyphicon-remove btn-space"></span>');
-    // return btn;
 }
 
 function appendTableRows(rows) {
@@ -141,6 +114,7 @@ function routeMessage(msg) {
                 console.log(globalContext.groupMap);
                 renderGroups(globalContext.groupMap);
                 hookDeleteGroupHandlers($);
+                hookAddExtensionHandler($);
                 break;
             }
         case "delete-group":
@@ -159,12 +133,13 @@ function routeMessage(msg) {
             }
         case "add-group-extension":
             {
+                console.log("add-group-extension command response received");
                 console.log(msg);
                 if (msg.data.status) {
-                    var btn = extensionToButton(msg.data.ext);
-                    $(`div[data-dm-groupname='${msg.data.group.groupName}'] div:nth-child(2)`).append(btn);
+                    let btn = extensionToButton(msg.data.ext);
+                    $(`div[data-dm-group-extensions='${msg.data.group.groupName}']`).append(btn);
                 }
-                hookEventHandlers();
+                //hook delete extension handler
                 break;
             }
         case "add-new-group":
@@ -179,7 +154,8 @@ function routeMessage(msg) {
                 appendTableRows(renderGroupsToTableRow(group));
 
                 //shouldn't rehook add group event handler
-                hookEventHandlers($);
+                hookAddExtensionHandler($);
+                //hook delete extension handlers
                 break;
             }
         default:
@@ -262,19 +238,66 @@ function saveGroup(groupName, directory, extensions) {
     return true;
 }
 
-function extensionModalSetup($) {
-    $(".add-group").click(() => {
-        $(".new-extension-form")
+function hookAddExtensionHandler($) {
+    extensionModalFormValidationSetup($);
+
+    $(".add-extension").click(function () {
+        let groupName = $(this).attr("data-dm-groupname");
+
+        $(".new-extension-modal")
             .modal({
                 closable: false,
-                onDeny: () => {
-                    document.forms["newgroup"].reset()
+                onHidden: () => {
+                    globalContext.newExtensionForm.form('reset');
+                    $(".ui.error.message").children().remove();
                 },
                 onApprove: () => {
-                    //approved function call here
+                    if (!globalContext.newExtensionForm.form("validate form")) {
+                        return false;
+                    }
+
+                    let extensionList = globalContext.newExtensionForm.form("get value", 'groupextensions');
+                    return saveGroupExtension(groupName, extensionList);
                 },
                 transition: 'fade up'
             })
             .modal("show");
     });
+}
+
+function extensionModalFormValidationSetup($) {
+    globalContext.newExtensionForm
+        .form({
+            fields: {
+                groupname: {
+                    identifier: 'groupextensions',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please specify {name}'
+                    }]
+                }
+            }
+        })
+}
+
+function saveGroupExtension(groupName, extension) {
+
+    console.log(extension);
+    var group = globalContext.groupMap.findGroup(groupName);
+    if (group == undefined) {
+        return false;
+    }
+
+    if (group.addExtension(extension)) {
+        globalContext.port.postMessage({
+            command: "add-group-extension",
+            data: {
+                group: group.toObject,
+                ext: extension
+            }
+        });
+    } else {
+        return false
+    }
+
 }

@@ -65,7 +65,7 @@
         <header class="header">New Group</header>
         <main class="content">
             <form id="newgroup" class="ui form new-group-form">
-                    <div class="ui error message"></div>
+                <div class="ui error message"></div>
                 <div class="ui labeled basic segment fluid field input">
                     <label for="groupname" class="ui label">Group Name</label>
                     <input placeholder="Group Name" type="text" name="groupname" id="groupname" required>
@@ -82,7 +82,7 @@
                     </label>
                     <input placeholder="Extensions" type="text" name="extensions" id="extensions" required>
                 </div>
-                
+
             </form>
         </main>
         <footer class="actions">
@@ -100,16 +100,19 @@
 
     <!-- New Extension form start -->
 
-    <aside class="ui modal  new-extension-form">
+    <aside class="ui modal  new-extension-modal">
         <i class="close icon"></i>
         <header class="header">New Extension</header>
         <main class="content">
-            <div class="ui labeled basic segment fluid field input">
-                <label for="directory" class="ui label">
-                    Extension List
-                </label>
-                <input placeholder="Extenstions separated by comma" type="text" name="groupextensions" id="groupextensions">
-            </div>
+            <form id="new-extenstion" class="ui form new-extension-form">
+                <div class="ui error message"></div>
+                <div class="ui labeled basic segment fluid field input">
+                    <label for="directory" class="ui label">
+                        Extension List
+                    </label>
+                    <input placeholder="Extenstions separated by comma" type="text" name="groupextensions" id="groupextensions">
+                </div>
+            </form>
         </main>
         <footer class="actions">
             <button class="ui negative right labeled icon button">
@@ -123,7 +126,7 @@
         </footer>
     </aside>
     <!-- New Extension form end -->
- 
+
     <script src="/scripts/jquery.js" type="text/javascript"></script>
     <script src="/scripts/config.js" type="text/javascript"></script>
     <script src="/scripts/GroupMapv2.js" type="text/javascript"></script>
