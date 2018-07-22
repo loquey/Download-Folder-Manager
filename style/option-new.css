@@ -22,3 +22,7 @@
 .delete-group:hover {
     cursor: pointer;
 }
+
+.ui.segment.container {
+    top : 50px;
+}
