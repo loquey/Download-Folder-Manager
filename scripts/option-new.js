@@ -71,9 +71,9 @@ function renderGroupsToTableRow(item, index) {
     return `
         <div class="ui column " data-dm-groupfor="${item.groupName}">
             <div class="ui top attached block isabelline header grid no-top-padding">
-                <i class="two wide column">${item.groupName}</i>
+                <i class="fourteen wide column">${item.groupName}&nbsp;&nbsp;&nbsp;<i class="caret right icon">&nbsp;&nbsp;&nbsp;${item.directory}</i></i>
                 <i class="ui circle close icon right floated column delete-group" data-dm-groupname="${item.groupName}"></i>
-            </div>
+            </div> 
             <div class="ui attached segment card-top-border" data-dm-group-extensions="${item.groupName}">
                 <a class="ui topical-rain-forest isabelline right bottom right attached label no-lower-right add-extension " data-dm-groupname="${item.groupName}">
                     <i class="right plus circle icon"></i>
@@ -81,10 +81,10 @@ function renderGroupsToTableRow(item, index) {
                 </a>
                 ${item.extensions(extensionToButton).join("")}
             </div>
-            <div class="ui bottom attached block isabelline header">
+            <!-- <div class="ui bottom attached block isabelline header">
                 <i class="folder icon"></i>
-                ${item.directory}
-            </div>
+                [Downloads folder]/${item.directory}
+            </div> -->
         </div>`;
 }
 
