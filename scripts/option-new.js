@@ -69,20 +69,19 @@ function renderGroups(groupMap) {
 
 function renderGroupsToTableRow(item, index) {
     return `
-        <div class="ui column" data-dm-groupfor="${item.groupName}">
-            <div class="ui top attached block header grid no-top-padding">
-                <i class="object group icon column"></i>
+        <div class="ui column " data-dm-groupfor="${item.groupName}">
+            <div class="ui top attached block isabelline header grid no-top-padding">
                 <i class="two wide column">${item.groupName}</i>
                 <i class="ui circle close icon right floated column delete-group" data-dm-groupname="${item.groupName}"></i>
             </div>
-            <div class="ui attached segment" data-dm-group-extensions="${item.groupName}">
-                <a class="ui blue right bottom right attached label no-lower-right add-extension" data-dm-groupname="${item.groupName}">
+            <div class="ui attached segment card-top-border" data-dm-group-extensions="${item.groupName}">
+                <a class="ui topical-rain-forest isabelline right bottom right attached label no-lower-right add-extension " data-dm-groupname="${item.groupName}">
                     <i class="right plus circle icon"></i>
                     Add Extension
                 </a>
                 ${item.extensions(extensionToButton).join("")}
             </div>
-            <div class="ui bottom attached block header">
+            <div class="ui bottom attached block isabelline header">
                 <i class="folder icon"></i>
                 ${item.directory}
             </div>
@@ -91,7 +90,7 @@ function renderGroupsToTableRow(item, index) {
 
 function extensionToButton(ext) {
     return `
-        <div class="ui label row-spacing" data-dm-ext="${ext}">
+        <div class="ui label row-spacing isabelline" data-dm-ext="${ext}">
             ${ext}
             <i class="close icon dm-ext"></i>
         </div>`;
